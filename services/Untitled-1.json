@@ -1,0 +1,13 @@
+// 	"Statement": [
+// 		{
+// 			"Effect": "Allow",
+// 			"Principal": {
+// 				"AWS": "arn:aws:iam::560458559179:user/eran-avichzer"
+// 			},
+// 			"Action": [
+// 				"s3:PutObject",
+// 				"s3:getObject"
+// 			],
+// 			"Resource": "arn:aws:s3:::full-prices-bucket/*"
+// 		}
+// 	]

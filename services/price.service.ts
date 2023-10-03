@@ -57,13 +57,13 @@ const getPrices = async (fileName: string, db: string) => {
 						PromotionDescription: promo.PromotionDescription._text,
 						PromotionUpdateDate: promo.PromotionUpdateDate._text,
 						PromotionStartDate: promo.PromotionStartDate._text,
-						MinQty: promo?.MinQty?._text || null,
-						DiscountedPrice: promo?.DiscountedPrice?._text || null,
-						DiscountedPricePerMida: promo?.DiscountedPricePerMida?._text || null,
-						MinNoOfItemOfered: promo?.MinNoOfItemOfered?._text || null,
-						WeightUnit: promo?.WeightUnit?._text || null,
-						DiscountRate: promo?.DiscountRate?._text || null,
-						ItemCode: [promo.PromotionItems.Item.ItemCode._text],
+						PromotionMinQty: promo?.MinQty?._text || null,
+						PromotionDiscountedPrice: promo?.DiscountedPrice?._text || null,
+						PromotionDiscountedPricePerMida: promo?.DiscountedPricePerMida?._text || null,
+						PromotionMinNoOfItemOfered: promo?.MinNoOfItemOfered?._text || null,
+						PromotionWeightUnit: promo?.WeightUnit?._text || null,
+						PromotionDiscountRate: promo?.DiscountRate?._text || null,
+						PromotionItemCode: [promo.PromotionItems.Item.ItemCode._text],
 					}
 				}
 			})

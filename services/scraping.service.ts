@@ -77,7 +77,7 @@ const getRamiLeviPuppeteer = async (fileName: string) => {
 	logger.info("Enter Rami Levi page successefully")
 
 	await page.type("#username", USER_NAME)
-	logger.info("insert UserName: ", USER_NAME)
+	logger.info("insert UserName", USER_NAME)
 
 	await Promise.all([page.click("#login-button"), page.waitForNavigation({ waitUntil: "networkidle0" })])
 	logger.info("Submitted form")
