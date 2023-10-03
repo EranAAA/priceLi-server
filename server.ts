@@ -46,7 +46,7 @@ const startScrpping = async () => {
 	// AWS
 	if (pricesWithPromotion.length) {
 		// TODO: RUN CLEAR TABLE BEFORE EXECUTE
-		await dynamoService.uploadToS3(pricesWithPromotion.slice(0,1000), BUCKET_NAME, FILE_NAME)
+		await dynamoService.uploadToS3(pricesWithPromotion.slice(0,1000) /* ONLY THE FIRST 1000 FOR NOW */ , BUCKET_NAME, FILE_NAME)
 	}
 }
 
