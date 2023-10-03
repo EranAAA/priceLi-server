@@ -1,6 +1,5 @@
-// const AWS = require("aws-sdk")
 import * as AWS from "aws-sdk"
-import { Prices } from "../interfaces/table"
+import { Prices, PricesWithPromotion } from "../interfaces/table"
 
 require("dotenv").config()
 
@@ -14,50 +13,7 @@ const credentials = {
 // Update AWS configuration with new credentials
 AWS.config.update(credentials)
 
-const dynamoClient = new AWS.DynamoDB.DocumentClient()
-const TABLE_NAME = "rami-levi-price-full"
-
-const getData = async () => {
-	const params = {
-		TableName: TABLE_NAME,
-		AttributesToGet: ["ItemCode"],
-	}
-	const data = await dynamoClient.scan(params).promise()
-	// console.log("getData", data.Items.length)
-	return data.Items
-}
-
-const clearDynamoDB = async () => {
-	// const chunkSize = 25
-	// let count = 0
-	// const data = await getData()
-	// for (let i = 0; i < data.length; i += chunkSize) {
-	// 	const items = data.slice(i, i + chunkSize)
-	// 	const putReqs = items.map((item: any) => ({ DeleteRequest: { Key: { ItemCode: item.ItemCode } } }))
-	// 	const req = { RequestItems: { "rami-levi-price-full": putReqs } }
-	// 	await dynamoClient.batchWrite(req).promise()
-	// 	console.log(i, " Items Deleted")
-	// 	count++
-	// }
-	// console.log("Job done", count)
-}
- 
-const saveToDynamoDB = async (data: any) => {
-	const chunkSize = 25
-	let count = 0
-	for (let i = 0; i < data.length; i += chunkSize) {
-		const items = data.slice(i, i + chunkSize)
-		const putReqs = items.map((item: any) => ({ PutRequest: { Item: item } }))
-		const req = { RequestItems: { "rami-levi-price-full": putReqs } }
-
-		await dynamoClient.batchWrite(req).promise()
-		console.log(i, " Items Added")
-		count++
-	}
-	console.log("Job done", count)
-}
-
-const uploadToS3 = async (data: Prices[], bucketName: string, fileName: string): Promise<void> => {
+const uploadToS3 = async (data: PricesWithPromotion[], bucketName: string, fileName: string): Promise<void> => {
 	// Set up AWS S3
 	const s3 = new AWS.S3()
 
@@ -79,10 +35,5 @@ const uploadToS3 = async (data: Prices[], bucketName: string, fileName: string):
 }
 
 module.exports = {
-	getData,
-	clearDynamoDB,
-	saveToDynamoDB,
 	uploadToS3,
 }
-
-// getData()

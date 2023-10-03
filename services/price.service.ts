@@ -7,7 +7,6 @@ const convert = require("xml-js")
 let { gunzip } = require("zlib")
 gunzip = util.promisify(gunzip)
 
-//
 const _getStringFromGzipFile = async (inputFilePath: string) => {
 	const fs = require("fs")
 	const sourceBuffer = await fs.promises.readFile(inputFilePath)

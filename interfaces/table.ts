@@ -1,5 +1,7 @@
+
+export interface PricesWithPromotion extends Prices, Promotion {}
+
 export interface Prices {
-	// Prices
 	ItemCode: string
 	AllowDiscount: string
 	ItemId: string
@@ -18,7 +20,8 @@ export interface Prices {
 	UnitQty: string
 	bIsWeighted: string
 
-	// Promotion
+}
+export interface Promotion {
 	PromotionId?: string
 	PromotionDescription?: string
 	PromotionEndDate?: string

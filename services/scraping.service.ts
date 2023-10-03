@@ -7,62 +7,6 @@ const path = require("path")
 const USER_NAME = "RamiLevi"
 const URL_PATH = "https://url.retail.publishedprices.co.il/login"
 
-// const _getRamiLeviFile = async path => {
-// 	const filePath = `./files/${path.title}`
-// 	const URL = path.href + path.title
-
-// 	// console.log('File Path: ', filePath)
-// 	// console.log('Full URL: ', 'https://url.retail.publishedprices.co.il' + path.href)
-
-// 	try {
-// 		const file = fs.createWriteStream(filePath)
-// 		// const request = https.get(URL, (response) => {
-// 		//    response.pipe(file)
-// 		// })
-
-// 		// process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-// 		console.log(URL)
-// 		request
-// 			.get(URL)
-// 			.on("error", err => {
-// 				console.error("******** error: ********", err)
-// 			})
-// 			.pipe(file)
-
-// 		console.log("File SAVED")
-// 	} catch (error) {
-// 		console.log("******** ERROR: ********", error)
-// 	}
-// }
-
-// const _renameFile = () => {
-// 	const folderPath = "./files"
-
-// 	let filesArr = fs.readdirSync(folderPath)
-// 	filesArr.forEach(file => {
-// 		let fullPath = path.join(folderPath, file)
-// 		let fileExtension = path.extname(file)
-// 		let fileName = path.basename(file, fileExtension)
-
-// 		if (fileExtension === ".crdownload") {
-// 			console.log(file)
-// 			console.log(path.extname(file))
-// 			let newFileName = fileName
-// 			try {
-// 				fs.renameSync(fullPath, path.join(folderPath, newFileName))
-// 			} catch (error) {
-// 				console.error(error)
-// 			}
-// 		}
-// 	})
-// }
-
-// const _delay = (time: number) => {
-// 	return new Promise(function (resolve) {
-// 		setTimeout(resolve, time)
-// 	})
-// }
-
 const getRamiLeviPuppeteer = async (fileName: string) => {
 	const browser = await puppeteer.launch({
 		ignoreHTTPSErrors: true,
