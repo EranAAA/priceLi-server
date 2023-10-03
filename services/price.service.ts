@@ -9,7 +9,7 @@ gunzip = util.promisify(gunzip)
 
 //
 const _getStringFromGzipFile = async (inputFilePath: string) => {
-   const fs = require("fs")
+	const fs = require("fs")
 	const sourceBuffer = await fs.promises.readFile(inputFilePath)
 	return await gunzip(sourceBuffer)
 }
@@ -32,7 +32,7 @@ const getPrices = async (fileName: string, db: string) => {
 
 		if (db === "rami-levi-promo-full") {
 			rows = rows.Root.Promotions.Promotion
-			rows = rows.map(promo => {
+			rows = rows.map((promo: any) => {
 				if (promo.PromotionItems.Item instanceof Array) {
 					if (promo.PromotionItems.Item.length > 20) return { ...promo, ItemCode: [] }
 					else
@@ -48,7 +48,7 @@ const getPrices = async (fileName: string, db: string) => {
 							MinNoOfItemOfered: promo?.MinNoOfItemOfered?._text || null,
 							WeightUnit: promo?.WeightUnit?._text || null,
 							DiscountRate: promo?.DiscountRate?._text || null,
-							ItemCode: promo.PromotionItems.Item.map(item => item.ItemCode._text),
+							ItemCode: promo.PromotionItems.Item.map((item: any) => item.ItemCode._text),
 						}
 				} else {
 					return {
@@ -71,7 +71,7 @@ const getPrices = async (fileName: string, db: string) => {
 			logger.info("Got Promos: ", rows.length)
 		} else if (db === "rami-levi-price-full") {
 			rows = rows.Root.Items.Item
-			rows = rows.map(price => {
+			rows = rows.map((price: any) => {
 				return {
 					// ...price,
 					ItemCode: price.ItemCode._text,

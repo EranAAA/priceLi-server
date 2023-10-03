@@ -19,34 +19,6 @@ const getData = async () => {
     return data.Items
 };
 
-// const getCharacterById = async (id) => {
-//     const params = {
-//         TableName: TABLE_NAME,
-//         Key: {
-//             id,
-//         },
-//     };
-//     return await dynamoClient.get(params).promise();
-// };
-
-// const addOrUpdateCharacter = async (character) => {
-//     const params = {
-//         TableName: TABLE_NAME,
-//         Item: character,
-//     };
-//     return await dynamoClient.put(params).promise();
-// };
-
-// const deleteCharacter = async (id) => {
-//     const params = {
-//         TableName: TABLE_NAME,
-//         Key: {
-//             id,
-//         },
-//     };
-//     return await dynamoClient.delete(params).promise();
-// };
-
 const clearDynamoDB = async () => {
     const chunkSize = 25;
     let count = 0
@@ -80,11 +52,7 @@ const saveToDynamoDB = async (data) => {
 }
 
 module.exports = {
-    // dynamoClient,
     getData,
-    // getCharacterById,
-    // addOrUpdateCharacter,
-    // deleteCharacter,
     clearDynamoDB,
     saveToDynamoDB
 };

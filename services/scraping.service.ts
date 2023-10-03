@@ -87,8 +87,8 @@ const getRamiLeviPuppeteer = async (fileName: string) => {
 
 	const data = await page.evaluate(() => {
 		return Promise.resolve({
-			href: (document.querySelector("tbody").lastChild as HTMLElement).querySelector("a").getAttribute("href"),
-			title: (document.querySelector("tbody").lastChild as HTMLElement).querySelector("a").getAttribute("title"),
+			href: (document as any).querySelector("tbody").lastChild.querySelector("a").getAttribute("href"),
+			title: (document as any).querySelector("tbody").lastChild.querySelector("a").getAttribute("title"),
 		})
 	})
 
@@ -109,7 +109,7 @@ const getRamiLeviPuppeteer = async (fileName: string) => {
 
 const waitUntilDownload = async (page: any, fileName = "") => {
 	return new Promise((resolve, reject) => {
-		page._client().on("Page.downloadProgress", e => {
+		page._client().on("Page.downloadProgress", (e: any) => {
 			if (e.state === "completed") {
 				logger.info("Successfully downloaded")
 				logger.info(e)
