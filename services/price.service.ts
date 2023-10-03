@@ -21,6 +21,7 @@ const getPrices = async (fileName: string, db: string) => {
 		logger.info("Loading prices", fileName)
 
 		const path = await scrapingService.getRamiLevi(fileName)
+		logger.info("PATH: ", path)
 
 		const stringContent = await _getStringFromGzipFile(`./files/${path.title}`)
 		const compressed = await gzip(stringContent)
