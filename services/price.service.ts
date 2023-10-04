@@ -36,32 +36,30 @@ const getPrices = async (fileName: string, db: string) => {
 					if (promo.PromotionItems.Item.length > 20) return { ...promo, ItemCode: [] }
 					else
 						return {
-							// ...promo,
-							PromotionId: promo.PromotionId._text,
-							PromotionDescription: promo.PromotionDescription._text,
-							PromotionEndDate: promo.PromotionEndDate._text,
-							PromotionStartDate: promo.PromotionStartDate._text,
-							MinQty: promo?.MinQty?._text || null,
-							DiscountedPrice: promo?.DiscountedPrice?._text || null,
-							DiscountedPricePerMida: promo?.DiscountedPricePerMida?._text || null,
-							MinNoOfItemOfered: promo?.MinNoOfItemOfered?._text || null,
-							WeightUnit: promo?.WeightUnit?._text || null,
-							DiscountRate: promo?.DiscountRate?._text || null,
-							ItemCode: promo.PromotionItems.Item.map((item: any) => item.ItemCode._text),
+							PromotionId: promo.PromotionId._text, // +
+							PromotionDescription: promo.PromotionDescription._text, // +
+							PromotionEndDate: promo.PromotionEndDate._text, // +
+							PromotionStartDate: promo.PromotionStartDate._text, // +
+							PromotionMinQty: promo?.MinQty?._text || "", // +
+							PromotionDiscountedPrice: promo?.DiscountedPrice?._text || "", // +
+							// PromotionDiscountedPricePerMida: promo?.DiscountedPricePerMida?._text || "", // -
+							// PromotionMinNoOfItemOfered: promo?.MinNoOfItemOfered?._text || "", // -
+							// PromotionWeightUnit: promo?.WeightUnit?._text || "", // -
+							PromotionDiscountRate: promo?.DiscountRate?._text || "", // +
+							PromotionItemCode: promo.PromotionItems.Item.map((item: any) => item.ItemCode._text), // +
 						}
 				} else {
 					return {
-						// ...promo,
 						PromotionId: promo.PromotionId._text,
 						PromotionDescription: promo.PromotionDescription._text,
 						PromotionUpdateDate: promo.PromotionUpdateDate._text,
 						PromotionStartDate: promo.PromotionStartDate._text,
-						PromotionMinQty: promo?.MinQty?._text || null,
-						PromotionDiscountedPrice: promo?.DiscountedPrice?._text || null,
-						PromotionDiscountedPricePerMida: promo?.DiscountedPricePerMida?._text || null,
-						PromotionMinNoOfItemOfered: promo?.MinNoOfItemOfered?._text || null,
-						PromotionWeightUnit: promo?.WeightUnit?._text || null,
-						PromotionDiscountRate: promo?.DiscountRate?._text || null,
+						PromotionMinQty: promo?.MinQty?._text || "",
+						PromotionDiscountedPrice: promo?.DiscountedPrice?._text || "",
+						// PromotionDiscountedPricePerMida: promo?.DiscountedPricePerMida?._text || "",
+						// PromotionMinNoOfItemOfered: promo?.MinNoOfItemOfered?._text || "",
+						// PromotionWeightUnit: promo?.WeightUnit?._text || "",
+						PromotionDiscountRate: promo?.DiscountRate?._text || "",
 						PromotionItemCode: [promo.PromotionItems.Item.ItemCode._text],
 					}
 				}
@@ -72,24 +70,23 @@ const getPrices = async (fileName: string, db: string) => {
 			rows = rows.Root.Items.Item
 			rows = rows.map((price: any) => {
 				return {
-					// ...price,
 					ItemCode: price.ItemCode._text,
-					AllowDiscount: price.AllowDiscount._text,
+					// AllowDiscount: price.AllowDiscount._text,
 					ItemId: price.ItemId._text,
 					ItemName: price.ItemName._text,
 					ItemPrice: price.ItemPrice._text,
-					ItemStatus: price.ItemStatus._text,
-					ItemType: price.ItemType._text,
-					ManufactureCountry: price.ManufactureCountry._text,
-					ManufacturerItemDescription: price.ManufacturerItemDescription._text,
+					// ItemStatus: price.ItemStatus._text, 
+					// ItemType: price.ItemType._text, 
+					// ManufactureCountry: price.ManufactureCountry._text, 
+					// ManufacturerItemDescription: price.ManufacturerItemDescription._text, 
 					ManufacturerName: price.ManufacturerName._text,
-					PriceUpdateDate: price.PriceUpdateDate._text,
-					QtyInPackage: price.QtyInPackage._text,
+					// PriceUpdateDate: price.PriceUpdateDate._text, 
+					// QtyInPackage: price.QtyInPackage._text, 
 					Quantity: price.Quantity._text,
-					UnitOfMeasure: price.UnitOfMeasure._text,
-					UnitOfMeasurePrice: price.UnitOfMeasurePrice._text,
-					UnitQty: price.UnitQty._text,
-					bIsWeighted: price.bIsWeighted._text,
+					// UnitOfMeasure: price.UnitOfMeasure._text, 
+					// UnitOfMeasurePrice: price.UnitOfMeasurePrice._text, 
+					// UnitQty: price.UnitQty._text, 
+					// bIsWeighted: price.bIsWeighted._text, 
 				}
 			})
 			console.log("EXAMPLE_PRICE: ", rows[0])

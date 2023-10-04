@@ -27,11 +27,11 @@ export interface Promotion {
 	PromotionEndDate?: string
 	PromotionUpdateDate?: string
 	PromotionStartDate?: string
-	PromotionMinQty?: string | null
-	PromotionDiscountedPrice?: string | null
-	PromotionDiscountedPricePerMida?: string | null
-	PromotionMinNoOfItemOfered?: string | null
-	PromotionWeightUnit?: string | null
-	PromotionDiscountRate?: string | null
+	PromotionMinQty?: string 
+	PromotionDiscountedPrice?: string 
+	PromotionDiscountedPricePerMida?: string 
+	PromotionMinNoOfItemOfered?: string 
+	PromotionWeightUnit?: string
+	PromotionDiscountRate?: string
 	PromotionItemCode?: string[]
 }
