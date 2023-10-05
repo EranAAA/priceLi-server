@@ -33,13 +33,14 @@ const getPrices = async (fileName: string, db: string) => {
 			rows = rows.Root.Promotions.Promotion
 			rows = rows.map((promo: any) => {
 				if (promo.PromotionItems.Item instanceof Array) {
-					if (promo.PromotionItems.Item.length > 20) return { ...promo, ItemCode: [] }
-					else
+					// if (promo.PromotionItems.Item.length > 100) return { ...promo, ItemCode: [] }
+					// else
 						return {
 							PromotionId: promo.PromotionId._text, // +
 							PromotionDescription: promo.PromotionDescription._text, // +
-							PromotionEndDate: promo.PromotionEndDate._text, // +
 							PromotionStartDate: promo.PromotionStartDate._text, // +
+							PromotionEndDate: promo.PromotionEndDate._text, // +
+							PromotionUpdateDate: promo.PromotionUpdateDate._text,
 							PromotionMinQty: promo?.MinQty?._text || "", // +
 							PromotionDiscountedPrice: promo?.DiscountedPrice?._text || "", // +
 							// PromotionDiscountedPricePerMida: promo?.DiscountedPricePerMida?._text || "", // -
@@ -52,8 +53,9 @@ const getPrices = async (fileName: string, db: string) => {
 					return {
 						PromotionId: promo.PromotionId._text,
 						PromotionDescription: promo.PromotionDescription._text,
-						PromotionUpdateDate: promo.PromotionUpdateDate._text,
 						PromotionStartDate: promo.PromotionStartDate._text,
+						PromotionEndDate: promo.PromotionEndDate._text, // +
+						PromotionUpdateDate: promo.PromotionUpdateDate._text,
 						PromotionMinQty: promo?.MinQty?._text || "",
 						PromotionDiscountedPrice: promo?.DiscountedPrice?._text || "",
 						// PromotionDiscountedPricePerMida: promo?.DiscountedPricePerMida?._text || "",
@@ -87,6 +89,7 @@ const getPrices = async (fileName: string, db: string) => {
 					// UnitOfMeasurePrice: price.UnitOfMeasurePrice._text, 
 					// UnitQty: price.UnitQty._text, 
 					// bIsWeighted: price.bIsWeighted._text, 
+					promotions: []
 				}
 			})
 			console.log("EXAMPLE_PRICE: ", rows[0])

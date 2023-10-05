@@ -1,5 +1,4 @@
-import { Prices, Promotion, PricesWithPromotion } from "./interfaces/table"
-import { pricesDemo } from "./services/demo.data"
+import { Prices, Promotion } from "./interfaces/table"
 
 const CronJob = require("cron").CronJob
 const priceService = require("./services/price.service")
@@ -26,7 +25,7 @@ const TABLE_NAME = "rami-levi-price-full"
 // job.start()
 
 const startScrpping = async () => {
-	let pricesWithPromotion: PricesWithPromotion[] = []
+	let pricesWithPromotion: Prices[] = []
 	const prices: Prices[] = await priceService.getPrices("PriceFull7290058140886-029", "rami-levi-price-full")
 	const promos: Promotion[] = await priceService.getPrices("PromoFull7290058140886-029", "rami-levi-promo-full")
 
@@ -37,8 +36,8 @@ const startScrpping = async () => {
 			const promo = promos[j]
 			if ("PromotionItemCode" in promo && Array.isArray(promo?.PromotionItemCode)) {
 				if (promo.PromotionItemCode.some((code: any) => code === prices[i].ItemCode)) {
-					const updateTable = { ...pricesWithPromotion[i], ...promo }
-					pricesWithPromotion[i] = updateTable
+					delete promo.PromotionItemCode
+					pricesWithPromotion[i].promotions.push(promo)
 				}
 			}
 		}

@@ -19,8 +19,9 @@ export interface Prices {
 	UnitOfMeasurePrice: string
 	UnitQty: string
 	bIsWeighted: string
-
+	promotions: Promotion[]
 }
+
 export interface Promotion {
 	PromotionId?: string
 	PromotionDescription?: string
