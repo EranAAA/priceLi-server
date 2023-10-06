@@ -6,7 +6,7 @@ const path = require("path")
 
 const URL_PATH = "https://url.retail.publishedprices.co.il/login"
 
-const startScrapingProcess = async (storeId: string, userName: string) => {
+const startScrapingProcess = async (storeId: string, userName: string, password: string) => {
 	const browser = await puppeteer.launch({
 		ignoreHTTPSErrors: true,
 	})
@@ -20,7 +20,12 @@ const startScrapingProcess = async (storeId: string, userName: string) => {
 	logger.info("Enter page successefully")
 
 	await page.type("#username", userName)
-	logger.info("insert UserName", userName)
+	logger.info("insert userName", userName)
+
+	if (password) {
+		await page.type("#password", password)
+		logger.info("insert password", password)
+	}
 
 	await Promise.all([page.click("#login-button"), page.waitForNavigation({ waitUntil: "networkidle0" })])
 	logger.info("Submitted form")

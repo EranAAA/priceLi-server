@@ -1,5 +1,7 @@
 import * as AWS from "aws-sdk"
-import { Prices, PricesWithPromotion } from "../interfaces/table"
+import { Prices } from "../interfaces/table"
+
+const logger = require("./services/logger.service")
 
 require("dotenv").config()
 
@@ -13,7 +15,7 @@ const credentials = {
 // Update AWS configuration with new credentials
 AWS.config.update(credentials)
 
-const uploadToS3 = async (data: PricesWithPromotion[], bucketName: string, fileName: string): Promise<void> => {
+const uploadToS3 = async (data: Prices[], bucketName: string, fileName: string): Promise<void> => {
 	// Set up AWS S3
 	const s3 = new AWS.S3()
 
@@ -31,7 +33,7 @@ const uploadToS3 = async (data: PricesWithPromotion[], bucketName: string, fileN
 	// Upload to S3
 	await s3.putObject(params).promise()
 
-	console.log(`File uploaded to S3: ${fileName}`)
+	logger.info(`File uploaded to S3: ${fileName}`)
 }
 
 module.exports = {

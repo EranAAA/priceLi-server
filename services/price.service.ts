@@ -13,13 +13,13 @@ const _getStringFromGzipFile = async (inputFilePath: string) => {
 	return await gunzip(sourceBuffer)
 }
 
-const getPrices = async (storeId: string, type: string, userName: string) => {
+const getPrices = async (storeId: string, type: string, userName: string, password: string) => {
 	const logger = require("./logger.service")
 
 	try {
 		logger.info("Loading prices", storeId)
 
-		const path = await scrapingService.startScrapingProcess(storeId, userName)
+		const path = await scrapingService.startScrapingProcess(storeId, userName, password)
 		logger.info("PATH: ", path)
 
 		const stringContent = await _getStringFromGzipFile(`./files/${path.title}`)
