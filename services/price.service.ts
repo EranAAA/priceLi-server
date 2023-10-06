@@ -13,13 +13,13 @@ const _getStringFromGzipFile = async (inputFilePath: string) => {
 	return await gunzip(sourceBuffer)
 }
 
-const getPrices = async (fileName: string, db: string) => {
+const getPrices = async (storeId: string, type: string, userName: string) => {
 	const logger = require("./logger.service")
 
 	try {
-		logger.info("Loading prices", fileName)
+		logger.info("Loading prices", storeId)
 
-		const path = await scrapingService.getRamiLevi(fileName)
+		const path = await scrapingService.startScrapingProcess(storeId, userName)
 		logger.info("PATH: ", path)
 
 		const stringContent = await _getStringFromGzipFile(`./files/${path.title}`)
@@ -29,67 +29,48 @@ const getPrices = async (fileName: string, db: string) => {
 
 		let rows = JSON.parse(data)
 
-		if (db === "rami-levi-promo-full") {
+		if (type === "promo") {
 			rows = rows.Root.Promotions.Promotion
 			rows = rows.map((promo: any) => {
-				if (promo.PromotionItems.Item instanceof Array) {
-					// if (promo.PromotionItems.Item.length > 100) return { ...promo, ItemCode: [] }
-					// else
-						return {
-							PromotionId: promo.PromotionId._text, // +
-							PromotionDescription: promo.PromotionDescription._text, // +
-							PromotionStartDate: promo.PromotionStartDate._text, // +
-							PromotionEndDate: promo.PromotionEndDate._text, // +
-							PromotionUpdateDate: promo.PromotionUpdateDate._text,
-							PromotionMinQty: promo?.MinQty?._text || "", // +
-							PromotionDiscountedPrice: promo?.DiscountedPrice?._text || "", // +
-							// PromotionDiscountedPricePerMida: promo?.DiscountedPricePerMida?._text || "", // -
-							// PromotionMinNoOfItemOfered: promo?.MinNoOfItemOfered?._text || "", // -
-							// PromotionWeightUnit: promo?.WeightUnit?._text || "", // -
-							PromotionDiscountRate: promo?.DiscountRate?._text || "", // +
-							PromotionItemCode: promo.PromotionItems.Item.map((item: any) => item.ItemCode._text), // +
-						}
-				} else {
-					return {
-						PromotionId: promo.PromotionId._text,
-						PromotionDescription: promo.PromotionDescription._text,
-						PromotionStartDate: promo.PromotionStartDate._text,
-						PromotionEndDate: promo.PromotionEndDate._text, // +
-						PromotionUpdateDate: promo.PromotionUpdateDate._text,
-						PromotionMinQty: promo?.MinQty?._text || "",
-						PromotionDiscountedPrice: promo?.DiscountedPrice?._text || "",
-						// PromotionDiscountedPricePerMida: promo?.DiscountedPricePerMida?._text || "",
-						// PromotionMinNoOfItemOfered: promo?.MinNoOfItemOfered?._text || "",
-						// PromotionWeightUnit: promo?.WeightUnit?._text || "",
-						PromotionDiscountRate: promo?.DiscountRate?._text || "",
-						PromotionItemCode: [promo.PromotionItems.Item.ItemCode._text],
-					}
+				return {
+					PromotionId: promo.PromotionId._text,
+					PromotionDescription: promo.PromotionDescription._text,
+					PromotionStartDate: promo.PromotionStartDate._text,
+					PromotionEndDate: promo.PromotionEndDate._text,
+					PromotionUpdateDate: promo.PromotionUpdateDate._text,
+					PromotionMinQty: promo?.MinQty?._text || "",
+					PromotionDiscountedPrice: promo?.DiscountedPrice?._text || "",
+					PromotionDiscountRate: promo?.DiscountRate?._text || "",
+					PromotionItemCode: promo.PromotionItems.Item instanceof Array ? promo.PromotionItems.Item.map((item: any) => item.ItemCode._text) : [promo.PromotionItems.Item.ItemCode._text],
+					// PromotionDiscountedPricePerMida: promo?.DiscountedPricePerMida?._text || "",
+					// PromotionMinNoOfItemOfered: promo?.MinNoOfItemOfered?._text || "",
+					// PromotionWeightUnit: promo?.WeightUnit?._text || "",
 				}
 			})
 			console.log("EXAMPLE_PROMO: ", rows[0])
 			logger.info("Got Promos: ", rows.length)
-		} else if (db === "rami-levi-price-full") {
+		} else if (type === "price") {
 			rows = rows.Root.Items.Item
 			rows = rows.map((price: any) => {
 				return {
 					ItemCode: price.ItemCode._text,
-					// AllowDiscount: price.AllowDiscount._text,
 					ItemId: price.ItemId._text,
 					ItemName: price.ItemName._text,
 					ItemPrice: price.ItemPrice._text,
-					// ItemStatus: price.ItemStatus._text, 
-					// ItemType: price.ItemType._text, 
-					// ManufactureCountry: price.ManufactureCountry._text, 
-					// ManufacturerItemDescription: price.ManufacturerItemDescription._text, 
 					ManufacturerName: price.ManufacturerName._text,
-					// PriceUpdateDate: price.PriceUpdateDate._text, 
-					// QtyInPackage: price.QtyInPackage._text, 
 					Quantity: price.Quantity._text,
-					// UnitOfMeasure: price.UnitOfMeasure._text, 
-					// UnitOfMeasurePrice: price.UnitOfMeasurePrice._text, 
-					// UnitQty: price.UnitQty._text, 
-					// bIsWeighted: price.bIsWeighted._text, 
-					promotions: []
+					// AllowDiscount: price.AllowDiscount._text,
+					// ItemStatus: price.ItemStatus._text,
+					// ItemType: price.ItemType._text,
+					// ManufactureCountry: price.ManufactureCountry._text,
+					// ManufacturerItemDescription: price.ManufacturerItemDescription._text,
+					// PriceUpdateDate: price.PriceUpdateDate._text,
+					// QtyInPackage: price.QtyInPackage._text,
+					// UnitOfMeasure: price.UnitOfMeasure._text,
+					// UnitOfMeasurePrice: price.UnitOfMeasurePrice._text,
+					// UnitQty: price.UnitQty._text,
+					// bIsWeighted: price.bIsWeighted._text,
+					promotions: [],
 				}
 			})
 			console.log("EXAMPLE_PRICE: ", rows[0])

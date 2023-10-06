@@ -4,10 +4,9 @@ const logger = require("./logger.service")
 const fs = require("fs")
 const path = require("path")
 
-const USER_NAME = "RamiLevi"
 const URL_PATH = "https://url.retail.publishedprices.co.il/login"
 
-const getRamiLeviPuppeteer = async (fileName: string) => {
+const startScrapingProcess = async (storeId: string, userName: string) => {
 	const browser = await puppeteer.launch({
 		ignoreHTTPSErrors: true,
 	})
@@ -18,16 +17,16 @@ const getRamiLeviPuppeteer = async (fileName: string) => {
 	logger.info("Set Download Behavior")
 
 	await page.goto(URL_PATH)
-	logger.info("Enter Rami Levi page successefully")
+	logger.info("Enter page successefully")
 
-	await page.type("#username", USER_NAME)
-	logger.info("insert UserName", USER_NAME)
+	await page.type("#username", userName)
+	logger.info("insert UserName", userName)
 
 	await Promise.all([page.click("#login-button"), page.waitForNavigation({ waitUntil: "networkidle0" })])
 	logger.info("Submitted form")
 
 	logger.info("Searching...")
-	await page.type(".form-control", fileName, { delay: 1000 })
+	await page.type(".form-control", storeId, { delay: 1000 })
 
 	const data = await page.evaluate(() => {
 		return Promise.resolve({
@@ -42,9 +41,9 @@ const getRamiLeviPuppeteer = async (fileName: string) => {
 	await page.click(`a[title="${data.title}"]`)
 	await waitUntilDownload(page)
 
-	if (fileName === "PriceFull7290058140886-029") await page.screenshot({ path: "screenshot/ramiLeviPrice.png", fullPage: true })
-	if (fileName === "PromoFull7290058140886-029") await page.screenshot({ path: "screenshot/ramiLeviPromo.png", fullPage: true })
-	logger.info("Screenshot created successfully")
+	// if (storeId === "PriceFull7290058140886-029") await page.screenshot({ path: "screenshot/ramiLeviPrice.png", fullPage: true })
+	// if (storeId === "PromoFull7290058140886-029") await page.screenshot({ path: "screenshot/ramiLeviPromo.png", fullPage: true })
+	// logger.info("Screenshot created successfully")
 
 	await browser.close()
 
@@ -65,14 +64,6 @@ const waitUntilDownload = async (page: any, fileName = "") => {
 	})
 }
 
-// Implement
-const getRamiLevi = async (fileName: string) => {
-	logger.info("====================================")
-	logger.info("Start RamiLevi process")
-	logger.info("====================================")
-	return await getRamiLeviPuppeteer(fileName)
-}
-
 module.exports = {
-	getRamiLevi,
+	startScrapingProcess,
 }
