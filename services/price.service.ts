@@ -3,8 +3,6 @@ const util = require("util")
 
 const scrapingService = require("./scraping.service")
 
-const { parseString } = require("xml2js")
-const CircularJSON = require("circular-json")
 const convert = require("xml-js")
 let { gunzip, unzip, gzipSync } = require("zlib")
 gunzip = util.promisify(gunzip)
