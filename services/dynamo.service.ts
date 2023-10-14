@@ -1,7 +1,7 @@
 import * as AWS from "aws-sdk"
 import { Prices } from "../interfaces/table"
 
-const logger = require("./services/logger.service")
+const logger = require("../services/logger.service")
 
 require("dotenv").config()
 

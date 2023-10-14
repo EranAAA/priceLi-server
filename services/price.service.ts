@@ -3,14 +3,32 @@ const util = require("util")
 
 const scrapingService = require("./scraping.service")
 
+const { parseString } = require("xml2js")
+const CircularJSON = require("circular-json")
 const convert = require("xml-js")
-let { gunzip } = require("zlib")
+let { gunzip, unzip, gzipSync } = require("zlib")
 gunzip = util.promisify(gunzip)
 
-const _getStringFromGzipFile = async (inputFilePath: string) => {
+let gunzipAttemps = 0
+
+const _getStringFromGzipFile = async (inputFilePath: string, path: string) => {
 	const fs = require("fs")
+	const logger = require("./logger.service")
+
 	const sourceBuffer = await fs.promises.readFile(inputFilePath)
-	return await gunzip(sourceBuffer)
+
+	try {
+		return await gunzip(sourceBuffer)
+	} catch (error) {
+		if (gunzipAttemps) return console.log(error)
+		const response = await fixAndSaveFile(inputFilePath, path)
+		if (response) {
+			gunzipAttemps++
+			logger.info("***** Try gunzip again *****")
+			const fixedSourceBuffer = await fs.promises.readFile(inputFilePath)
+			return await gunzip(fixedSourceBuffer)
+		}
+	}
 }
 
 const getPrices = async (storeId: string, type: string, userName: string, password: string) => {
@@ -20,11 +38,16 @@ const getPrices = async (storeId: string, type: string, userName: string, passwo
 		logger.info("Loading prices", storeId)
 
 		const path = await scrapingService.startScrapingProcess(storeId, userName, password)
-		logger.info("PATH: ", path)
+		// const path = {title: "pricefull7290058140886-039-202310140601.gz"}
+		// const path = { title: "promofull7290058140886-039-202310140601.gz" }
+		// const path = {title: "PriceFull7290058140886-029-202210230010.gz"}
 
-		const stringContent = await _getStringFromGzipFile(`./files/${path.title}`)
+		const stringContent = await _getStringFromGzipFile(`./files/${path.title}`, path.title)
+
 		const compressed = await gzip(stringContent)
+
 		const decompressed = await ungzip(compressed)
+
 		const data = convert.xml2json(decompressed, { compact: true, spaces: 4 })
 
 		let rows = JSON.parse(data)
@@ -80,6 +103,50 @@ const getPrices = async (storeId: string, type: string, userName: string, passwo
 		return rows
 	} catch (error) {
 		logger.error(error)
+	}
+}
+
+const fixAndSaveFile = async (inputFilePath: string, gzPath: string): Promise<boolean> => {
+	const fs = require("fs")
+	const path = require("path")
+
+	const inputFile: string = inputFilePath
+	const outputDir: string = "./files"
+
+	try {
+		// Step 1: Read the gzipped file
+		const data = await fs.promises.readFile(inputFile)
+
+		// Step 2: Attempt to decompress the gzipped data
+		try {
+			const decompressedData = await new Promise<Buffer>((resolve, reject) => {
+				unzip(data, (unzipErr: Error | null, result: Buffer) => {
+					if (unzipErr) {
+						reject(unzipErr)
+					} else {
+						resolve(result)
+					}
+				})
+			})
+
+			// The file is already in a valid gzip format
+			console.log("File is in a valid gzip format.")
+			return true
+		} catch (unzipErr) {
+			console.error("Error during decompression:", unzipErr)
+
+			// Step 3: If decompression fails, attempt to fix the file by re-compressing it
+			const reCompressedData = gzipSync(data)
+			const fixedOutputFile = path.join(outputDir, gzPath)
+
+			fs.writeFileSync(fixedOutputFile, reCompressedData)
+
+			console.log("File fixed and saved:", fixedOutputFile)
+			return true
+		}
+	} catch (readErr) {
+		console.error("Error reading input file:", readErr)
+		return false
 	}
 }
 
