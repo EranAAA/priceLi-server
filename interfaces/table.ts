@@ -1,4 +1,3 @@
-
 export interface PricesWithPromotion extends Prices, Promotion {}
 
 export interface Prices {
@@ -28,11 +27,12 @@ export interface Promotion {
 	PromotionEndDate?: string
 	PromotionUpdateDate?: string
 	PromotionStartDate?: string
-	PromotionMinQty?: string 
-	PromotionDiscountedPrice?: string 
-	PromotionDiscountedPricePerMida?: string 
-	PromotionMinNoOfItemOfered?: string 
+	PromotionMinQty?: string
+	PromotionDiscountedPrice?: string
+	PromotionDiscountedPricePerMida?: string
+	PromotionMinNoOfItemOfered?: string
 	PromotionWeightUnit?: string
 	PromotionDiscountRate?: string
 	PromotionItemCode?: string[]
+	PromotionAdditionalRestrictions?: string
 }

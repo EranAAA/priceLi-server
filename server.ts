@@ -52,7 +52,7 @@ const startProcessByStore = async (priceStoreId: string, promoStoreId: string, u
 			const promo = promos[j]
 			if ("PromotionItemCode" in promo && Array.isArray(promo?.PromotionItemCode)) {
 				if (promo.PromotionItemCode.some((code: any) => code === prices[i].ItemCode)) {
-					delete promo.PromotionItemCode
+					promo.PromotionAdditionalRestrictions === "1" && delete promo.PromotionItemCode
 					pricesWithPromotion[i].promotions.push(promo)
 				}
 			}
