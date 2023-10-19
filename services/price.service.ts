@@ -36,7 +36,9 @@ const getPrices = async (storeId: string, type: string, userName: string, passwo
 		logger.info("Loading prices", storeId)
 
 		const path = await scrapingService.startScrapingProcess(storeId, userName, password)
+
 		// const path = type === "promo" ? { title: "PromoFull7290058140886-029-202310170600.gz" } : { title: "PriceFull7290058140886-029-202310170600.gz" }
+		// const path = type === "promo" ? { title: "PromoFull7290644700005-312-202310190110.gz" } : { title: "PriceFull7290644700005-312-202310190110.gz" }
 
 		const stringContent = await _getStringFromGzipFile(`./files/${path.title}`, path.title)
 

@@ -59,9 +59,11 @@ const startProcessByStore = async (priceStoreId: string, promoStoreId: string, u
 		}
 	}
 
+	logger.info("Uploading to AWS")
+
 	// AWS
 	if (pricesWithPromotion.length) {
-		await dynamoService.uploadToS3(pricesWithPromotion /*.slice(0,1000) ONLY THE FIRST 1000 FOR NOW */, bucketName, bucketFileName)
+		await dynamoService.uploadToS3(pricesWithPromotion, bucketName, bucketFileName)
 	}
 
 	logger.info(`--------Finish ${userName} process--------`)
