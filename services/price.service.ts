@@ -36,9 +36,10 @@ const getPrices = async (storeId: string, type: string, userName: string, passwo
 		logger.info("Loading prices", storeId)
 
 		const path = await scrapingService.startScrapingProcess(storeId, userName, password)
-
-		// const path = type === "promo" ? { title: "PromoFull7290058140886-029-202310170600.gz" } : { title: "PriceFull7290058140886-029-202310170600.gz" }
-		// const path = type === "promo" ? { title: "PromoFull7290644700005-312-202310190110.gz" } : { title: "PriceFull7290644700005-312-202310190110.gz" }
+		
+		// let path =  { title: "" }
+		// if (userName === "RamiLevi") path = type === "promo" ? { title: "PromoFull7290058140886-029-202310211800.gz" } : { title: "PriceFull7290058140886-029-202310211800.gz" }
+		// if (userName === "politzer") path = type === "promo" ? { title: "PromoFull7291059100008-005-202310210011.gz" } : { title: "PriceFull7291059100008-005-202310210010.gz" }
 
 		const stringContent = await _getStringFromGzipFile(`./files/${path.title}`, path.title)
 
@@ -63,7 +64,12 @@ const getPrices = async (storeId: string, type: string, userName: string, passwo
 					PromotionDiscountedPrice: promo?.DiscountedPrice?._text || "",
 					PromotionDiscountRate: promo?.DiscountRate?._text || "",
 					PromotionAdditionalRestrictions: promo?.AdditionalRestrictions?.AdditionalIsCoupon._text || "",
-					PromotionItemCode: promo.PromotionItems.Item instanceof Array ? promo.PromotionItems.Item.map((item: any) => item.ItemCode._text) : [promo.PromotionItems.Item.ItemCode._text],
+					PromotionItemCode:
+						promo.PromotionItems.Item instanceof Array && promo.PromotionItems.Item.length >= 100
+							? []
+							: promo.PromotionItems.Item instanceof Array
+							? promo.PromotionItems.Item.map((item: any) => item.ItemCode._text)
+							: [promo.PromotionItems.Item.ItemCode._text],
 					// PromotionDiscountedPricePerMida: promo?.DiscountedPricePerMida?._text || "",
 					// PromotionMinNoOfItemOfered: promo?.MinNoOfItemOfered?._text || "",
 					// PromotionWeightUnit: promo?.WeightUnit?._text || "",
