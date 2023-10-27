@@ -29,17 +29,13 @@ const _getStringFromGzipFile = async (inputFilePath: string, path: string) => {
 	}
 }
 
-const getPrices = async (storeId: string, type: string, userName: string, password: string) => {
+const getPrices = async (storeId: string, type: string, userName: string, password: string, isFromStorage: boolean) => {
 	const logger = require("./logger.service")
 
 	try {
 		logger.info("Loading prices", storeId)
 
-		const path = await scrapingService.startScrapingProcess(storeId, userName, password)
-		
-		// let path =  { title: "" }
-		// if (userName === "RamiLevi") path = type === "promo" ? { title: "PromoFull7290058140886-029-202310211800.gz" } : { title: "PriceFull7290058140886-029-202310211800.gz" }
-		// if (userName === "politzer") path = type === "promo" ? { title: "PromoFull7291059100008-005-202310210011.gz" } : { title: "PriceFull7291059100008-005-202310210010.gz" }
+		const path = isFromStorage ? await findLatestFileByName(storeId) : await scrapingService.startScrapingProcess(storeId, userName, password)
 
 		const stringContent = await _getStringFromGzipFile(`./files/${path.title}`, path.title)
 
@@ -153,6 +149,44 @@ const fixAndSaveFile = async (inputFilePath: string, gzPath: string): Promise<bo
 		console.error("Error reading input file:", readErr)
 		return false
 	}
+}
+
+const findLatestFileByName = async (searchName: string) => {
+	const fs = require("fs")
+	const path = require("path")
+
+	try {
+		// Read all files in the folder
+		const files = fs.readdirSync("/Users/eranavichzer/dev/Projects/PricingGov/backend-price-server/files")
+
+		// Filter files based on the specified name
+		const matchingFiles = files.filter((file: string) => file.startsWith(searchName))
+
+		// If no matching files found, return null
+		if (matchingFiles.length === 0) {
+			return null
+		}
+
+		// Sort files based on date (assuming date is at the end of the file name)
+		const sortedFiles = matchingFiles.sort((a: string, b: string) => {
+			const dateA = getDateString(a)
+			const dateB = getDateString(b)
+			return dateB - dateA // Sort in descending order
+		})
+
+		// Return the latest file
+		return { title: sortedFiles[0] }
+	} catch (error) {
+		console.error("Error reading files:", error)
+		return null
+	}
+}
+
+const getDateString = (value: string) => {
+	let array = value.split("-")
+	let splitDate = array[array.length - 1].split(".")[0]
+	let date = `${splitDate.slice(0, 4)}-${splitDate.slice(4, 6)}-${splitDate.slice(6, 8)}:${splitDate.slice(8, 10)}:${splitDate.slice(10, 12)}`
+	return Date.parse(date)
 }
 
 module.exports = {

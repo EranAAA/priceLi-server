@@ -35,7 +35,7 @@ const startProcesses = async () => {
 	const valuesArray = Object.keys(results).map(key => {
 		return { ItemCode: key, ...results[key] }
 	})
-	
+
 	if (Object.keys(results).length) {
 		await dynamoService.uploadToS3(valuesArray, "all-prices-bucket", "000-all-prices.json")
 	}
@@ -51,8 +51,8 @@ const startProcessByStore = async (priceStoreId: string, promoStoreId: string, u
 	logger.info(`--------Start ${userName} process--------`)
 
 	let pricesWithPromotion: Prices[] = []
-	const prices: Prices[] = await priceService.getPrices(priceStoreId, "price", userName, password)
-	const promos: Promotion[] = await priceService.getPrices(promoStoreId, "promo", userName, password)
+	const prices: Prices[] = await priceService.getPrices(priceStoreId, "price", userName, password, true)
+	const promos: Promotion[] = await priceService.getPrices(promoStoreId, "promo", userName, password, true)
 
 	pricesWithPromotion = prices
 
@@ -63,14 +63,17 @@ const startProcessByStore = async (priceStoreId: string, promoStoreId: string, u
 			const promo = promos[j]
 			if ("PromotionItemCode" in promo && Array.isArray(promo?.PromotionItemCode)) {
 				if (promo.PromotionItemCode.some((code: any) => code === prices[i].ItemCode)) {
-					promo.PromotionAdditionalRestrictions === "1" && delete promo.PromotionItemCode
+					// NOTE: For now promo.PromotionItemCode delete from the list for saving purposes.
+					// promo.PromotionAdditionalRestrictions === "1" && delete promo.PromotionItemCode
+					delete promo.PromotionItemCode
+
 					pricesWithPromotion[i].promotions.push(promo)
 				}
 			}
 		}
 	}
 
-	logger.info("Uploading to AWS")
+	// logger.info("Uploading to AWS")
 	// if (pricesWithPromotion.length) {
 	// 	await dynamoService.uploadToS3(pricesWithPromotion, bucketName, bucketFileName)
 	// }
